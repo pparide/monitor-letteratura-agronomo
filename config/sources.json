@@ -1,0 +1,110 @@
+{
+  "_comment": "Bootstrap Fase 1 minima: 4 riviste OA + 5 autori-chiave + 5 query anchor del piano-studio. OpenAlex IDs verificati il 06/05/2026 via api.openalex.org/sources?search=... e .../authors?search=...",
+
+  "journals": [
+    {
+      "name": "Forests (MDPI)",
+      "openalex_id": "S71324801",
+      "issn_l": "1999-4907",
+      "rss": "https://www.mdpi.com/rss/journal/forests",
+      "areas": ["verde_urbano", "vta"],
+      "is_oa": true,
+      "note": "MDPI continuous publication ~2000 paper/anno — filtraggio aggressivo via scoring"
+    },
+    {
+      "name": "iForest - Biogeosciences and Forestry (SISEF)",
+      "openalex_id": "S104841470",
+      "issn_l": "1971-7458",
+      "rss": "https://iforest.sisef.org/?action=rss",
+      "areas": ["verde_urbano", "vta"],
+      "is_oa": true,
+      "note": "rivista italiana SISEF, OA gratuita, accademicamente solida"
+    },
+    {
+      "name": "npj Urban Sustainability (Springer Nature)",
+      "openalex_id": "S4210223291",
+      "issn_l": "2661-8001",
+      "rss": "https://www.nature.com/npjurbansustain.rss",
+      "areas": ["verde_urbano"],
+      "is_oa": true,
+      "note": "high-tier journal Springer Nature, ~50 paper/anno — alta qualità"
+    },
+    {
+      "name": "Forest@ Rivista di Selvicoltura ed Ecologia Forestale (SISEF)",
+      "openalex_id": "S4210232336",
+      "issn_l": "1824-0119",
+      "rss": "https://forest.sisef.org/?action=rss",
+      "areas": ["verde_urbano", "vta"],
+      "is_oa": true,
+      "note": "rivista italiana in italiano + EN abstract — dibattito tecnico-pratico nazionale"
+    }
+  ],
+
+  "authors": [
+    {
+      "name": "Henrik Sjöman",
+      "openalex_id": "A5017961344",
+      "areas": ["verde_urbano", "vta"],
+      "affiliation": "SLU Swedish University of Agricultural Sciences",
+      "note": "scelta specie urbane, stress tolerance — ~70 works"
+    },
+    {
+      "name": "Cecil C. Konijnendijk",
+      "openalex_id": "A5026003033",
+      "areas": ["verde_urbano"],
+      "affiliation": "NBSI / University of Copenhagen (legacy)",
+      "note": "regola 3-30-300, urban forestry — ~245 works"
+    },
+    {
+      "name": "Fabio Salbitano",
+      "openalex_id": "A5085294407",
+      "areas": ["verde_urbano"],
+      "affiliation": "University of Sassari (current) / FAO co-author",
+      "note": "lead author FAO 2016 Guidelines — ~118 works"
+    },
+    {
+      "name": "Francesco Ferrini",
+      "openalex_id": "A5048515755",
+      "areas": ["verde_urbano", "vta"],
+      "affiliation": "University of Florence (UniFI)",
+      "note": "VTA + arboricoltura urbana, fisiologia stress alberi — ~279 works"
+    },
+    {
+      "name": "Giovanni Sanesi",
+      "openalex_id": "A5019753168",
+      "areas": ["verde_urbano"],
+      "affiliation": "University of Bari (UniBA) Aldo Moro",
+      "note": "urban forestry IT, EFI — ~221 works"
+    }
+  ],
+
+  "queries": [
+    {
+      "string": "Visual Tree Assessment",
+      "areas": ["vta"],
+      "note": "Q01 piano-studio"
+    },
+    {
+      "string": "urban forestry Italy",
+      "areas": ["verde_urbano"],
+      "note": "Q02 piano-studio"
+    },
+    {
+      "string": "tree risk assessment",
+      "areas": ["vta"],
+      "note": "Q03 piano-studio"
+    },
+    {
+      "string": "urban heat island Mediterranean",
+      "areas": ["verde_urbano"],
+      "note": "Q04 piano-studio"
+    },
+    {
+      "string": "Piano del Verde Comunale",
+      "areas": ["verde_urbano"],
+      "note": "Q05 piano-studio"
+    }
+  ],
+
+  "rss_feeds": []
+}

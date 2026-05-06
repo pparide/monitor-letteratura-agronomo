@@ -1,0 +1,87 @@
+{
+  "_comment": "Scoring rules — Fase 1: 2 aree (verde_urbano, vta). Pesi keyword: positive_high=+3, positive_medium=+2, positive_low=+1, negative=-2. Bonus: OA=+1, key_author=+5, cited>=5=+1.",
+
+  "min_score_threshold": 5,
+
+  "areas": {
+    "verde_urbano": {
+      "label": "Verde Urbano",
+      "positive_high": [
+        "urban forestry",
+        "urban heat island",
+        "tree canopy cover",
+        "Piano del Verde",
+        "nature-based solutions",
+        "biophilic city",
+        "3-30-300",
+        "urban greenspace"
+      ],
+      "positive_medium": [
+        "green infrastructure",
+        "urban tree",
+        "street tree",
+        "urban park",
+        "urban biodiversity",
+        "urban cooling",
+        "ecosystem services",
+        "evapotranspiration",
+        "stormwater"
+      ],
+      "positive_low": [
+        "Mediterranean climate",
+        "Italy",
+        "Italian",
+        "climate change adaptation",
+        "ENVI-met",
+        "remote sensing"
+      ],
+      "negative": [
+        "tropical rainforest",
+        "wildlife management"
+      ]
+    },
+
+    "vta": {
+      "label": "VTA / Arboricoltura ornamentale",
+      "positive_high": [
+        "Visual Tree Assessment",
+        "tree risk assessment",
+        "tree biomechanics",
+        "tree pulling test",
+        "tree decay detection",
+        "tree stability",
+        "TRAQ",
+        "elasto-inclinometer"
+      ],
+      "positive_medium": [
+        "sonic tomography",
+        "resistograph",
+        "wood decay fungi",
+        "Ganoderma",
+        "Phellinus",
+        "Inonotus",
+        "veteran tree",
+        "monumental tree"
+      ],
+      "positive_low": [
+        "branch attachment",
+        "root architecture",
+        "wind load",
+        "shade tree",
+        "tree pruning"
+      ],
+      "negative": [
+        "timber production",
+        "deforestation"
+      ]
+    }
+  },
+
+  "key_authors": [
+    {"name": "Henrik Sjöman", "openalex_id": "A5017961344", "areas": ["verde_urbano", "vta"]},
+    {"name": "Cecil Konijnendijk", "openalex_id": "A5026003033", "areas": ["verde_urbano"]},
+    {"name": "Fabio Salbitano", "openalex_id": "A5085294407", "areas": ["verde_urbano"]},
+    {"name": "Francesco Ferrini", "openalex_id": "A5048515755", "areas": ["verde_urbano", "vta"]},
+    {"name": "Giovanni Sanesi", "openalex_id": "A5019753168", "areas": ["verde_urbano"]}
+  ]
+}
