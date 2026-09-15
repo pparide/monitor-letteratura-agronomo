@@ -1,13 +1,15 @@
 {
-  "_comment": "Bootstrap Fase 1 minima: 4 riviste OA + 5 autori-chiave + 5 query anchor del piano-studio. OpenAlex IDs verificati il 06/05/2026 via api.openalex.org/sources?search=... e .../authors?search=...",
-
+  "_comment": "Fase 1 + port del 15/09/2026: 10 riviste + 17 voci-autore (15 persone, 2 ID aggiuntivi per i profili spezzati di Konijnendijk e Salbitano) + 5 query anchor. OpenAlex IDs di riviste e autori verificati via API il 15/09/2026 su affiliazione, ORCID, numero di lavori e topics. Environmental Research NON e fra le riviste per scelta: la nota in fonti/02_riviste_paywall.md prescrive di lasciarla entrare solo dal canale autori.",
   "journals": [
     {
       "name": "Forests (MDPI)",
       "openalex_id": "S71324801",
       "issn_l": "1999-4907",
       "rss": "https://www.mdpi.com/rss/journal/forests",
-      "areas": ["verde_urbano", "vta"],
+      "areas": [
+        "verde_urbano",
+        "vta"
+      ],
       "is_oa": true,
       "note": "MDPI continuous publication ~2000 paper/anno — filtraggio aggressivo via scoring"
     },
@@ -16,7 +18,10 @@
       "openalex_id": "S104841470",
       "issn_l": "1971-7458",
       "rss": "https://iforest.sisef.org/?action=rss",
-      "areas": ["verde_urbano", "vta"],
+      "areas": [
+        "verde_urbano",
+        "vta"
+      ],
       "is_oa": true,
       "note": "rivista italiana SISEF, OA gratuita, accademicamente solida"
     },
@@ -25,7 +30,9 @@
       "openalex_id": "S4210223291",
       "issn_l": "2661-8001",
       "rss": "https://www.nature.com/npjurbansustain.rss",
-      "areas": ["verde_urbano"],
+      "areas": [
+        "verde_urbano"
+      ],
       "is_oa": true,
       "note": "high-tier journal Springer Nature, ~50 paper/anno — alta qualità"
     },
@@ -34,77 +41,263 @@
       "openalex_id": "S4210232336",
       "issn_l": "1824-0119",
       "rss": "https://forest.sisef.org/?action=rss",
-      "areas": ["verde_urbano", "vta"],
+      "areas": [
+        "verde_urbano",
+        "vta"
+      ],
       "is_oa": true,
       "note": "rivista italiana in italiano + EN abstract — dibattito tecnico-pratico nazionale"
+    },
+    {
+      "name": "Urban Forestry & Urban Greening (Elsevier)",
+      "openalex_id": "S99909709",
+      "issn_l": "1610-8167",
+      "rss": null,
+      "areas": [
+        "verde_urbano",
+        "vta"
+      ],
+      "is_oa": false,
+      "note": "LA rivista del campo, assente dal bootstrap: fino al 15/09/2026 i suoi lavori entravano solo di rimbalzo dal canale autori (hit migliori di W37 e W38). Ibrida: ~30% dei paper OA, i metadati sono sempre liberi. ISSN-L corretto a 1610-8167 (il brief W37 riportava 1618-8667, che e il secondo ISSN della coppia)."
+    },
+    {
+      "name": "Arboriculture & Urban Forestry (ISA)",
+      "openalex_id": "S2764957011",
+      "issn_l": "1935-5297",
+      "rss": null,
+      "areas": [
+        "vta",
+        "verde_urbano"
+      ],
+      "is_oa": false,
+      "note": "La rivista VTA per eccellenza. ATTENZIONE ALL'ASPETTATIVA: OpenAlex la indicizza a blocchi, non in continuo -- verificato il 15/09/2026, solo 25 lavori nel 2026 e gli ultimi datati 05/08. Aggiungerla e giusto, ma non riempira il canale VTA da sola."
+    },
+    {
+      "name": "Urban Ecosystems (Springer)",
+      "openalex_id": "S194236184",
+      "issn_l": "1083-8155",
+      "rss": null,
+      "areas": [
+        "verde_urbano"
+      ],
+      "is_oa": false,
+      "note": "Autorizzata da Paride il 21/07/2026 (brief W30). Ricorrente nei digest con autori italiani; da qui l'hit W38 sull'agricoltura urbana."
+    },
+    {
+      "name": "Land (MDPI)",
+      "openalex_id": "S2738397068",
+      "issn_l": "2073-445X",
+      "rss": "https://www.mdpi.com/rss/journal/land",
+      "areas": [
+        "verde_urbano"
+      ],
+      "is_oa": true,
+      "filter_query": "urban tree OR urban forest OR urban green OR green infrastructure OR urban heat",
+      "note": "Mega-rivista: 13.675 lavori totali, 95 dal 01/09/2026 di cui 9 urbani. Attivata CON filter_query lato server, altrimenti i 50 slot di per-page restituiscono un campione arbitrario invece di una copertura."
+    },
+    {
+      "name": "Science of the Total Environment (Elsevier)",
+      "openalex_id": "S86852077",
+      "issn_l": "0048-9697",
+      "rss": null,
+      "areas": [
+        "verde_urbano"
+      ],
+      "is_oa": false,
+      "filter_query": "urban tree OR urban forest OR urban green OR urban heat island",
+      "note": "Autorizzata da Paride il 07/07/2026 (brief W28). Mega-multidisciplinare: attivata solo con filter_query, per la stessa ragione di Land."
+    },
+    {
+      "name": "PLOS Climate",
+      "openalex_id": "S4220650797",
+      "issn_l": "2767-3200",
+      "rss": null,
+      "areas": [
+        "verde_urbano"
+      ],
+      "is_oa": true,
+      "note": "Autorizzata da Paride il 07/07/2026 (brief W28). Volume contenuto (758 lavori totali): nessun filtro necessario."
     }
   ],
-
   "authors": [
     {
       "name": "Henrik Sjöman",
       "openalex_id": "A5017961344",
-      "areas": ["verde_urbano", "vta"],
+      "areas": [
+        "verde_urbano",
+        "vta"
+      ],
       "affiliation": "SLU Swedish University of Agricultural Sciences",
       "note": "scelta specie urbane, stress tolerance — ~70 works"
     },
     {
       "name": "Cecil C. Konijnendijk",
       "openalex_id": "A5026003033",
-      "areas": ["verde_urbano"],
+      "areas": [
+        "verde_urbano"
+      ],
       "affiliation": "NBSI / University of Copenhagen (legacy)",
-      "note": "regola 3-30-300, urban forestry — ~245 works"
+      "note": "regola 3-30-300, urban forestry — ~245 works | PROFILO SPEZZATO su piu ID OpenAlex: aggiunto A5008307501 (16 lavori, 'Cecil Konijnendijk van den Bosch'). Interrogare un solo ID perdeva quella parte della produzione.",
+      "openalex_id_alt": "A5008307501"
     },
     {
       "name": "Fabio Salbitano",
       "openalex_id": "A5085294407",
-      "areas": ["verde_urbano"],
+      "areas": [
+        "verde_urbano"
+      ],
       "affiliation": "University of Sassari (current) / FAO co-author",
-      "note": "lead author FAO 2016 Guidelines — ~118 works"
+      "note": "lead author FAO 2016 Guidelines — ~118 works | PROFILO SPEZZATO: aggiunto A5055161626 (6 lavori, Univ. Sassari).",
+      "openalex_id_alt": "A5055161626"
     },
     {
       "name": "Francesco Ferrini",
       "openalex_id": "A5048515755",
-      "areas": ["verde_urbano", "vta"],
+      "areas": [
+        "verde_urbano",
+        "vta"
+      ],
       "affiliation": "University of Florence (UniFI)",
-      "note": "VTA + arboricoltura urbana, fisiologia stress alberi — ~279 works"
+      "note": "VTA + arboricoltura urbana, fisiologia stress alberi — ~279 works | PROFILO FUSO CON UN OMONIMO dentro OpenAlex: sotto questo unico ID convivono il prof. Ferrini arboricoltore e un informatico dei Graph Neural Networks (arXiv, Univ. Trento, Aalborg). Non esiste un ID pulito da sostituire. Rimedio attivo: is_preprint_or_repository() in src/noise_filter.py nega il bonus d'autore ai lavori che escono su preprint server e repository. Da segnalare a OpenAlex come errore di disambiguazione."
     },
     {
       "name": "Giovanni Sanesi",
       "openalex_id": "A5019753168",
-      "areas": ["verde_urbano"],
+      "areas": [
+        "verde_urbano"
+      ],
       "affiliation": "University of Bari (UniBA) Aldo Moro",
       "note": "urban forestry IT, EFI — ~221 works"
+    },
+    {
+      "name": "Raffaele Lafortezza",
+      "openalex_id": "A5024501248",
+      "areas": [
+        "verde_urbano"
+      ],
+      "affiliation": "University of Bari Aldo Moro / EFI",
+      "note": "ORCID 0000-0003-4642-8435, 260 lavori, topics Land Use and Ecosystem Services + Urban Green Space and Health. Proposto nei brief W19, W26, W31 e W37 senza mai essere portato."
+    },
+    {
+      "name": "Carlo Calfapietra",
+      "openalex_id": "A5021005543",
+      "areas": [
+        "verde_urbano"
+      ],
+      "affiliation": "CNR-IRET / Univ. della Tuscia",
+      "note": "ORCID 0000-0001-5040-4343, 183 lavori. Autorizzato da Paride il 07/07/2026 (brief W28)."
+    },
+    {
+      "name": "Mohammad A. Rahman",
+      "openalex_id": "A5030383701",
+      "areas": [
+        "verde_urbano"
+      ],
+      "affiliation": "The University of Melbourne",
+      "note": "ORCID 0000-0001-9872-010X, 86 lavori, topics Urban Heat Island Mitigation. ATTENZIONE: il primo risultato della ricerca per nome e un altro Rahman (Federation University, smoking behavior, 378 lavori) -- ID scelto su ORCID e topics, non sul ranking dell'API."
+    },
+    {
+      "name": "Stephen J. Livesley",
+      "openalex_id": "A5023802545",
+      "areas": [
+        "verde_urbano"
+      ],
+      "affiliation": "The University of Melbourne",
+      "note": "ORCID 0000-0003-3506-2458, 189 lavori, topics Urban Heat Island Mitigation."
+    },
+    {
+      "name": "Riccardo Buccolieri",
+      "openalex_id": "A5059847232",
+      "areas": [
+        "verde_urbano"
+      ],
+      "affiliation": "Universita del Salento",
+      "note": "ORCID 0000-0002-0102-7235, 159 lavori, topics Wind and Air Flow + Urban Heat Island. Profilo italiano meridionale, microclima urbano."
+    },
+    {
+      "name": "Silvano Fares",
+      "openalex_id": "A5074464747",
+      "areas": [
+        "verde_urbano"
+      ],
+      "affiliation": "CNR",
+      "note": "ORCID 0000-0002-1990-0928, 219 lavori. Candidato indicato come il piu forte nel brief W35."
+    },
+    {
+      "name": "Barbara Mariotti",
+      "openalex_id": "A5041391864",
+      "areas": [
+        "verde_urbano",
+        "vta"
+      ],
+      "affiliation": "University of Florence",
+      "note": "ORCID 0000-0003-3779-2104, 92 lavori, topics Seedling growth and survival. ATTENZIONE: esiste un'omonima oncologa a Verona (A5036953199) -- ID scelto su affiliazione e topics."
+    },
+    {
+      "name": "Richard J. Hauer",
+      "openalex_id": "A5078114034",
+      "areas": [
+        "vta",
+        "verde_urbano"
+      ],
+      "affiliation": "University of Wisconsin-Stevens Point, Institute of Forestry",
+      "note": "ORCID 0000-0002-3175-6981, 100 lavori, topics Urban Green Space and Health. Coautore dell'hit W38 sulle competenze dell'urban forestry; lavora su programmi comunali di gestione degli alberi, rischio e costi della cura: cerniera fra VTA e Piano del Verde. ATTENZIONE, TRE OMONIMI: A5061063096 e un cardiologo di Utrecht (260 lavori) e A5076448658 e F. Richard Hauer, ecologia fluviale, NELLA STESSA UNIVERSITA. UNICA VOCE DEL PORT NON GIA IN LISTA NELLO STRATO 1: proposta nel brief W38 del 15/09/2026."
+    },
+    {
+      "name": "Salvatore Losco",
+      "openalex_id": "A5049054866",
+      "areas": [
+        "verde_urbano"
+      ],
+      "affiliation": "Univ. della Campania Luigi Vanvitelli",
+      "note": "ORCID 0000-0001-5830-7847, 18 lavori, topics Urban Planning and Valuation. Profilo locale campano, in lista dal 28/07/2026 (brief W31). Resa attesa bassa, costo una chiamata."
+    },
+    {
+      "name": "Cipriano Cerullo",
+      "openalex_id": "A5106256986",
+      "areas": [
+        "verde_urbano"
+      ],
+      "affiliation": "Univ. della Campania Luigi Vanvitelli",
+      "note": "3 lavori, topics Land Use and Ecosystem Services. Profilo locale campano, in lista dal 28/07/2026. Resa attesa bassa, costo una chiamata."
     }
   ],
-
   "queries": [
     {
       "string": "Visual Tree Assessment",
-      "areas": ["vta"],
+      "areas": [
+        "vta"
+      ],
       "note": "Q01 piano-studio"
     },
     {
       "string": "urban forestry Italy",
-      "areas": ["verde_urbano"],
+      "areas": [
+        "verde_urbano"
+      ],
       "note": "Q02 piano-studio"
     },
     {
       "string": "tree risk assessment",
-      "areas": ["vta"],
+      "areas": [
+        "vta"
+      ],
       "note": "Q03 piano-studio"
     },
     {
       "string": "urban heat island Mediterranean",
-      "areas": ["verde_urbano"],
+      "areas": [
+        "verde_urbano"
+      ],
       "note": "Q04 piano-studio"
     },
     {
       "string": "Piano del Verde Comunale",
-      "areas": ["verde_urbano"],
+      "areas": [
+        "verde_urbano"
+      ],
       "note": "Q05 piano-studio"
     }
   ],
-
   "rss_feeds": []
 }

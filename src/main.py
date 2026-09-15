@@ -23,6 +23,7 @@ from src.fetchers.crossref import fetch_crossref
 from src.fetchers.europepmc import fetch_europepmc
 from src.fetchers.openalex import fetch_openalex
 from src.fetchers.rss_journals import fetch_rss
+from src.noise_filter import filter_noise
 from src.scoring import score_paper
 from src.seen import load_seen, save_seen
 
@@ -51,19 +52,36 @@ def main(*, since_days: int = 14, dry_run: bool = False) -> int:
     for journal in sources.get("journals", []) or []:
         sid = journal.get("openalex_id")
         if sid:
-            papers = fetch_openalex(source_id=sid, since_days=since_days)
-            print(f"[main]   journal {journal.get('name','?')} (OpenAlex {sid}): {len(papers)} papers")
-            fetch_summary["openalex_journal"] += len(papers)
+            papers = fetch_openalex(
+                source_id=sid,
+                filter_query=journal.get("filter_query"),
+                since_days=since_days,
+            )
+            fq = f" [search: {journal['filter_query']}]" if journal.get("filter_query") else ""
+            print(f"[main]   journal {journal.get('name','?')} (OpenAlex {sid}){fq}: {len(papers)} papers")
+            fetch_summary["openalex_journal_calls"] += 1
+            fetch_summary["openalex_journal_papers"] += len(papers)
             all_papers.extend(papers)
 
     # 2. Authors: query by author_id (OpenAlex)
     for author in sources.get("authors", []) or []:
-        aid = author.get("openalex_id")
-        if aid:
+        # Entrambi gli ID quando il profilo OpenAlex e spezzato su piu voci
+        # (Konijnendijk e Salbitano). Interrogare solo il principale perdeva
+        # silenziosamente la produzione finita sull'altro: bug trovato il
+        # 15/09/2026 con un run reale, invisibile ai test offline.
+        for aid in [author.get("openalex_id"), author.get("openalex_id_alt")]:
+            if not aid:
+                continue
             # widen window for authors (paper might be slow to index)
             papers = fetch_openalex(author_id=aid, since_days=since_days * 2)
-            print(f"[main]   author {author.get('name','?')} (OpenAlex {aid}): {len(papers)} papers")
-            fetch_summary["openalex_author"] += len(papers)
+            alt = " [ID alternativo]" if aid == author.get("openalex_id_alt") else ""
+            print(f"[main]   author {author.get('name','?')} (OpenAlex {aid}){alt}: {len(papers)} papers")
+            # Due contatori distinti dal 15/09/2026: la voce unica
+            # `openalex_author` contava i PAPER, e per tre settimane (W36-W38)
+            # e stata letta nei brief come "numero di chiamate", facendo
+            # sospettare un guasto del canale autori che non esisteva.
+            fetch_summary["openalex_author_calls"] += 1
+            fetch_summary["openalex_author_papers"] += len(papers)
             all_papers.extend(papers)
 
     # 3. Free-text queries: try OpenAlex + EuropePMC for cross-validation
@@ -74,8 +92,9 @@ def main(*, since_days: int = 14, dry_run: bool = False) -> int:
         oa_papers = fetch_openalex(query=qstr, since_days=since_days)
         ep_papers = fetch_europepmc(query=qstr, since_days=since_days)
         print(f"[main]   query {qstr!r}: OpenAlex={len(oa_papers)}, EuropePMC={len(ep_papers)}")
-        fetch_summary["openalex_query"] += len(oa_papers)
-        fetch_summary["europepmc_query"] += len(ep_papers)
+        fetch_summary["openalex_query_calls"] += 1
+        fetch_summary["openalex_query_papers"] += len(oa_papers)
+        fetch_summary["europepmc_query_papers"] += len(ep_papers)
         all_papers.extend(oa_papers)
         all_papers.extend(ep_papers)
 
@@ -87,6 +106,14 @@ def main(*, since_days: int = 14, dry_run: bool = False) -> int:
         all_papers.extend(papers)
 
     print(f"[main] total fetched (pre-dedupe): {len(all_papers)}")
+
+    # 4bis. Filtri di rumore (commenti di open peer review, errata, paratesti)
+    all_papers, dropped = filter_noise(all_papers, rules)
+    if dropped:
+        print(f"[main] scartati come rumore: {len(dropped)}")
+        for title, reason in dropped[:20]:
+            print(f"[main]   - {reason}: {title}")
+        fetch_summary["scartati_rumore"] = len(dropped)
 
     # 5. Deduplicate by DOI
     deduped = deduplicate_papers(all_papers)

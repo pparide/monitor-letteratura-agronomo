@@ -239,3 +239,170 @@ if __name__ == "__main__":
 
     print(f"\n=== {len(tests) - len(failed)}/{len(tests)} passed ===")
     sys.exit(1 if failed else 0)
+
+
+# =====================================================================
+# Test aggiunti il 15/09/2026 — patch al motore dopo il brief W38.
+# Ogni test ricostruisce un caso REALE preso dai digest, non un caso di scuola.
+# =====================================================================
+
+from src.noise_filter import is_noise, is_preprint_or_repository, filter_noise
+
+_RULES = json.loads((HERE.parent / "config" / "rules.json").read_text(encoding="utf-8"))
+
+
+def test_falso_positivo_senza_keyword_forte_declassato():
+    """Caso reale W38: transizione pascolo-foresta nelle Alpi italiane.
+
+    Arrivava a 5 esatti con 'ecosystem services' + 'Italy' + 'Italian' + OA,
+    senza una sola parola urbana.
+    """
+    p = _sample_paper(
+        "10.1007/s11625-026-01889-7",
+        "An integrated interdisciplinary framework to explore social-ecological "
+        "implications of pasture-forest transition in the Italian Alps",
+        "We study ecosystem services in Italy and the Italian Alps after pasture "
+        "abandonment and spontaneous reforestation.",
+        ["Andrea Scartazza", "Maria Adamo"],
+        journal="Sustainability Science",
+    )
+    score, area, kws = score_paper(p, _RULES)
+    assert score == 0, f"atteso declassamento a 0, ottenuto {score} ({kws})"
+    assert any("declassato" in k for k in kws)
+    print("  ✓ test_falso_positivo_senza_keyword_forte_declassato")
+
+
+def test_paper_urbano_vero_resta_sopra_soglia():
+    """Controprova: l'hit W38 score 11 deve restare, e ampiamente."""
+    p = _sample_paper(
+        "10.1016/j.ufug.2026.129679",
+        "Educator perspectives on the evolving competencies of urban forestry education",
+        "Urban forestry education and the ecosystem services delivered by the urban forest.",
+        ["Sara Barron", "Cecil C. Konijnendijk"],
+        journal="Urban forestry & urban greening",
+    )
+    p["author_ids"] = ["A5026003033"]
+    score, area, kws = score_paper(p, _RULES)
+    assert score >= 5, f"l'hit vero e stato scartato: {score} ({kws})"
+    assert area == "verde_urbano"
+    assert any("author=" in k for k in kws), "bonus autore per ID non applicato"
+    print(f"  ✓ test_paper_urbano_vero_resta_sopra_soglia (score {score})")
+
+
+def test_profilo_spezzato_konijnendijk_id_secondario():
+    """Un lavoro sull'ID secondario deve dare lo stesso bonus del primario."""
+    p = _sample_paper("10.1000/alt", "Urban forestry governance",
+                      "urban greenspace and green infrastructure",
+                      ["Cecil Konijnendijk van den Bosch"], journal="Forests")
+    p["author_ids"] = ["A5008307501"]
+    _, _, kws = score_paper(p, _RULES)
+    assert any("author=" in k for k in kws), "ID alternativo non riconosciuto"
+    print("  ✓ test_profilo_spezzato_konijnendijk_id_secondario")
+
+
+def test_omonimo_ferrini_su_arxiv_non_prende_il_bonus():
+    """Caso reale W19-W22: l'informatico dei Graph Neural Networks.
+
+    Il paper non va scartato, ma senza il +5 non deve passare la soglia.
+    """
+    p = _sample_paper(
+        "10.48550/arxiv.2608.00000",
+        "Overcoming Shortcut Learning in Graph Neural Networks",
+        "We propose a method for graph neural networks calibration.",
+        ["Francesco Ferrini", "Veronica Lachi"],
+        journal="arXiv (Cornell University)",
+    )
+    p["author_ids"] = ["A5048515755"]
+    p["source_type"] = "repository"
+    assert is_preprint_or_repository(p, _RULES)
+    score, _, kws = score_paper(p, _RULES)
+    assert any("author_bonus_negato" in k for k in kws)
+    assert score < _RULES["min_score_threshold"], f"passa ancora la soglia: {score} ({kws})"
+    print("  ✓ test_omonimo_ferrini_su_arxiv_non_prende_il_bonus")
+
+
+def test_ferrini_vero_su_rivista_prende_il_bonus():
+    """Controprova: lo stesso ID, su rivista peer-reviewed, resta valido."""
+    p = _sample_paper(
+        "10.1016/j.ufug.2026.11111",
+        "Red-leafed trees under drought stress in the urban environment",
+        "Urban tree physiology, street tree selection and ecosystem services.",
+        ["Francesco Ferrini"],
+        journal="Urban forestry & urban greening",
+    )
+    p["author_ids"] = ["A5048515755"]
+    p["source_type"] = "journal"
+    assert not is_preprint_or_repository(p, _RULES)
+    _, _, kws = score_paper(p, _RULES)
+    assert any("author=" in k for k in kws), "il Ferrini vero ha perso il bonus"
+    print("  ✓ test_ferrini_vero_su_rivista_prende_il_bonus")
+
+
+def test_omonimo_di_cognome_non_prende_piu_il_bonus():
+    """Il match sul solo cognome faceva scattare +5 su qualunque omonimo.
+
+    Caso concreto verificato il 15/09/2026 via API: 'F. Richard Hauer',
+    ecologia fluviale, lavora NELLA STESSA universita del Richard J. Hauer
+    dell'urban forestry.
+    """
+    p = _sample_paper("10.1000/fluvial", "Hydrology and sediment transport in gravel-bed rivers",
+                      "Fish ecology and management in montane streams.",
+                      ["F. Richard Hauer"], journal="Freshwater Biology")
+    p["author_ids"] = ["A5076448658"]   # l'ecologo fluviale, non il nostro
+    _, _, kws = score_paper(p, _RULES)
+    assert not any("author=" in k for k in kws), f"bonus dato a un omonimo: {kws}"
+    print("  ✓ test_omonimo_di_cognome_non_prende_piu_il_bonus")
+
+
+def test_limite_noto_del_fallback_per_nome():
+    """Documenta un limite che resta, invece di far finta che sia risolto.
+
+    Senza author_ids (EuropePMC, CrossRef, RSS) due veri omonimi restano
+    indistinguibili e il bonus scatta. E accettato: quelle fonti non
+    espongono gli ID, e il caso e raro. Se un giorno mordera, la strada e
+    incrociare la rivista, non il nome.
+    """
+    p = _sample_paper("10.1000/fluvial2", "Hydrology of gravel-bed rivers",
+                      "Fish ecology in montane streams.",
+                      ["Richard Hauer"], journal="Freshwater Biology")
+    p.pop("author_ids", None)
+    _, _, kws = score_paper(p, _RULES)
+    assert any("author=" in k for k in kws), "il fallback per nome non funziona piu affatto"
+    print("  ✓ test_limite_noto_del_fallback_per_nome (limite documentato, non risolto)")
+
+
+def test_commento_di_open_review_scartato():
+    """Caso reale W34-W36: la falla EGUsphere, 5 falsi hit dallo stesso preprint."""
+    casi = [
+        ({"title": "Reply on RC2", "doi": "10.5194/egusphere-2026-3814-ac1",
+          "work_type": "peer-review"}, "work_type"),
+        ({"title": "Comment on egusphere-2026-3814", "doi": "10.5194/egusphere-2026-3814-rc1",
+          "work_type": "article"}, "title_prefix"),
+        ({"title": "Urban tree growth", "doi": "10.5194/egusphere-2026-3814-sc2",
+          "work_type": "article"}, "doi_pattern"),
+    ]
+    for stub, atteso in casi:
+        noise, reason = is_noise(stub, _RULES)
+        assert noise, f"non scartato: {stub}"
+        assert atteso in reason, f"scartato per il motivo sbagliato: {reason}"
+    # e un articolo vero non deve essere toccato
+    ok = {"title": "Educator perspectives on urban forestry education",
+          "doi": "10.1016/j.ufug.2026.129679", "work_type": "article"}
+    assert not is_noise(ok, _RULES)[0]
+    kept, dropped = filter_noise([c[0] for c in casi] + [ok], _RULES)
+    assert len(kept) == 1 and len(dropped) == 3
+    print("  ✓ test_commento_di_open_review_scartato")
+
+
+def test_sources_e_rules_sono_sincronizzati():
+    """Gli autori vivono in due file: se divergono, il motore lavora a meta."""
+    cfg = HERE.parent / "config"
+    sources = json.loads((cfg / "sources.json").read_text(encoding="utf-8"))
+    rules = json.loads((cfg / "rules.json").read_text(encoding="utf-8"))
+    ids_s = {a["openalex_id"] for a in sources["authors"]}
+    ids_r = {a["openalex_id"] for a in rules["key_authors"]}
+    assert ids_s == ids_r, f"disallineati: solo in sources {ids_s - ids_r}, solo in rules {ids_r - ids_s}"
+    # nessun ID duplicato fra le riviste
+    sids = [j["openalex_id"] for j in sources["journals"]]
+    assert len(sids) == len(set(sids)), "rivista duplicata in sources.json"
+    print(f"  ✓ test_sources_e_rules_sono_sincronizzati ({len(ids_s)} autori, {len(sids)} riviste)")

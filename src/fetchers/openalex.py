@@ -43,6 +43,12 @@ def _normalize_paper(work: dict[str, Any]) -> dict[str, Any]:
         if a.get("author")
     ]
 
+    author_ids = [
+        ((a.get("author") or {}).get("id") or "").replace("https://openalex.org/", "")
+        for a in authorships
+        if a.get("author")
+    ]
+
     return {
         "title": work.get("title") or "",
         "doi": (work.get("doi") or "").replace("https://doi.org/", "").lower(),
@@ -56,6 +62,12 @@ def _normalize_paper(work: dict[str, Any]) -> dict[str, Any]:
         "oa_url": open_access.get("oa_url"),
         "cited_by_count": work.get("cited_by_count", 0) or 0,
         "openalex_id": (work.get("id") or "").replace("https://openalex.org/", ""),
+        # Campi aggiunti il 15/09/2026 per i filtri di rumore e per il match
+        # d'autore per ID (vedi src/noise_filter.py e src/scoring.py).
+        "author_ids": [i for i in author_ids if i],
+        "work_type": work.get("type") or "",
+        "source_type": source.get("type") or "",
+        "source_host": source.get("host_organization_name") or "",
         "source_fetcher": "openalex",
     }
 
@@ -65,13 +77,20 @@ def fetch_openalex(
     source_id: Optional[str] = None,
     author_id: Optional[str] = None,
     query: Optional[str] = None,
+    filter_query: Optional[str] = None,
     since_days: int = 14,
     max_results: int = 50,
 ) -> list[dict[str, Any]]:
     """Fetch papers from OpenAlex by source/author/query.
 
     Pass exactly one of source_id, author_id, or query.
-    Returns list of normalized paper dicts.
+
+    `filter_query` (dal 15/09/2026) restringe lato server una rivista
+    mega-multidisciplinare a un tema, con `title_and_abstract.search`. Serve
+    perche `per-page` e finito: su una testata che pubblica centinaia di lavori
+    per finestra, chiedere i 50 piu recenti non da una copertura, da un campione
+    arbitrario. Misurato il 15/09/2026 su Land: 95 lavori dal 01/09, di cui 9
+    urbani -- la search taglia il 90% del volume senza perdere nulla di utile.
     """
     if not any([source_id, author_id, query]):
         raise ValueError("Must pass one of source_id, author_id, query")
@@ -83,6 +102,8 @@ def fetch_openalex(
         filters.append(f"primary_location.source.id:{source_id}")
     if author_id:
         filters.append(f"author.id:{author_id}")
+    if filter_query:
+        filters.append(f"title_and_abstract.search:{filter_query}")
 
     params: dict[str, Any] = {
         "mailto": USER_EMAIL,

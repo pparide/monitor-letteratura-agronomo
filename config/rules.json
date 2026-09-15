@@ -1,8 +1,6 @@
 {
-  "_comment": "Scoring rules — Fase 1: 2 aree (verde_urbano, vta). Pesi keyword: positive_high=+3, positive_medium=+2, positive_low=+1, negative=-2. Bonus: OA=+1, key_author=+5, cited>=5=+1.",
-
+  "_comment": "Scoring rules -- Fase 1: 2 aree (verde_urbano, vta). Pesi keyword: positive_high=+3, positive_medium=+2, positive_low=+1, negative=-2. Bonus: OA=+1, key_author=+5, cited>=5=+1. ATTENZIONE ALLA DUPLICAZIONE: gli autori-chiave stanno sia qui (key_authors, per il bonus +5) sia in sources.json (authors, per il fetch). Chi ne aggiunge uno deve toccare ENTRAMBI i file, altrimenti il motore scarica i lavori dell'autore senza dargli il bonus, o viceversa. Sincronizzati il 15/09/2026.",
   "min_score_threshold": 5,
-
   "areas": {
     "verde_urbano": {
       "label": "Verde Urbano",
@@ -40,7 +38,6 @@
         "wildlife management"
       ]
     },
-
     "vta": {
       "label": "VTA / Arboricoltura ornamentale",
       "positive_high": [
@@ -76,12 +73,169 @@
       ]
     }
   },
-
   "key_authors": [
-    {"name": "Henrik Sjöman", "openalex_id": "A5017961344", "areas": ["verde_urbano", "vta"]},
-    {"name": "Cecil Konijnendijk", "openalex_id": "A5026003033", "areas": ["verde_urbano"]},
-    {"name": "Fabio Salbitano", "openalex_id": "A5085294407", "areas": ["verde_urbano"]},
-    {"name": "Francesco Ferrini", "openalex_id": "A5048515755", "areas": ["verde_urbano", "vta"]},
-    {"name": "Giovanni Sanesi", "openalex_id": "A5019753168", "areas": ["verde_urbano"]}
-  ]
+    {
+      "name": "Henrik Sjöman",
+      "openalex_id": "A5017961344",
+      "areas": [
+        "verde_urbano",
+        "vta"
+      ]
+    },
+    {
+      "name": "Cecil C. Konijnendijk",
+      "openalex_id": "A5026003033",
+      "openalex_id_alt": "A5008307501",
+      "areas": [
+        "verde_urbano"
+      ]
+    },
+    {
+      "name": "Fabio Salbitano",
+      "openalex_id": "A5085294407",
+      "openalex_id_alt": "A5055161626",
+      "areas": [
+        "verde_urbano"
+      ]
+    },
+    {
+      "name": "Francesco Ferrini",
+      "openalex_id": "A5048515755",
+      "areas": [
+        "verde_urbano",
+        "vta"
+      ]
+    },
+    {
+      "name": "Giovanni Sanesi",
+      "openalex_id": "A5019753168",
+      "areas": [
+        "verde_urbano"
+      ]
+    },
+    {
+      "name": "Raffaele Lafortezza",
+      "openalex_id": "A5024501248",
+      "areas": [
+        "verde_urbano"
+      ]
+    },
+    {
+      "name": "Carlo Calfapietra",
+      "openalex_id": "A5021005543",
+      "areas": [
+        "verde_urbano"
+      ]
+    },
+    {
+      "name": "Mohammad A. Rahman",
+      "openalex_id": "A5030383701",
+      "areas": [
+        "verde_urbano"
+      ]
+    },
+    {
+      "name": "Stephen J. Livesley",
+      "openalex_id": "A5023802545",
+      "areas": [
+        "verde_urbano"
+      ]
+    },
+    {
+      "name": "Riccardo Buccolieri",
+      "openalex_id": "A5059847232",
+      "areas": [
+        "verde_urbano"
+      ]
+    },
+    {
+      "name": "Silvano Fares",
+      "openalex_id": "A5074464747",
+      "areas": [
+        "verde_urbano"
+      ]
+    },
+    {
+      "name": "Barbara Mariotti",
+      "openalex_id": "A5041391864",
+      "areas": [
+        "verde_urbano",
+        "vta"
+      ]
+    },
+    {
+      "name": "Richard J. Hauer",
+      "openalex_id": "A5078114034",
+      "areas": [
+        "vta",
+        "verde_urbano"
+      ]
+    },
+    {
+      "name": "Salvatore Losco",
+      "openalex_id": "A5049054866",
+      "areas": [
+        "verde_urbano"
+      ]
+    },
+    {
+      "name": "Cipriano Cerullo",
+      "openalex_id": "A5106256986",
+      "areas": [
+        "verde_urbano"
+      ]
+    }
+  ],
+  "require_positive_high": true,
+  "_comment_require_positive_high": "Regola del 15/09/2026. Un hit che raggiunge la soglia senza una sola keyword positive_high dell'area viene declassato a 0. Nasce dal digest W38: il paper sulla transizione pascolo-foresta nelle Alpi italiane arrivava a 5 esatti con 'ecosystem services'(+2) + 'Italy'(+1) + 'Italian'(+1) + OA(+1), zero parole urbane -- cioe qualunque paper ambientale italiano in open access passava. La firma di un autore-chiave scavalca la regola: se il lavoro e di uno dei monitorati, interessa comunque.",
+  "noise_filters": {
+    "_comment": "Filtri applicati PRIMA dello scoring, in src/noise_filter.py. Le liste vuote qui significano 'usa i default del modulo'.",
+    "excluded_work_types": [
+      "peer-review",
+      "erratum",
+      "paratext",
+      "editorial",
+      "letter",
+      "grant",
+      "retraction"
+    ],
+    "excluded_title_prefixes": [
+      "reply on",
+      "reply to",
+      "comment on",
+      "comments on",
+      "author comment",
+      "referee comment",
+      "short comment",
+      "community comment",
+      "correction to",
+      "corrigendum to",
+      "erratum to",
+      "response to",
+      "editorial comment"
+    ],
+    "excluded_doi_patterns": [
+      "egusphere-\\d{4}-\\d+-(ac|rc|sc|cc|ec)\\d+",
+      "\\bbg-\\d{4}-\\d+-(ac|rc|sc|cc)\\d+",
+      "\\bhess-\\d{4}-\\d+-(ac|rc|sc|cc)\\d+"
+    ],
+    "preprint_source_patterns": [
+      "arxiv",
+      "biorxiv",
+      "medrxiv",
+      "ssrn",
+      "research square",
+      "researchsquare",
+      "preprints.org",
+      "zenodo",
+      "figshare",
+      "iris",
+      "vbn",
+      "forskningsportal",
+      "institutional research information",
+      "repository"
+    ],
+    "_comment_egusphere": "La falla EGUsphere ha prodotto 5 falsi hit dallo stesso preprint in open review (W34 x3, W35, W36). Silente da W36, non risolta: il filtro nasce ora.",
+    "_comment_preprint": "preprint_source_patterns serve al caso Ferrini: nega il bonus +5 d'autore -- non scarta il paper -- quando la fonte e un preprint server o un repository istituzionale. Vedi fonti/03_autori_chiave.md, sezione FERRINI."
+  }
 }
