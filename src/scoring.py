@@ -8,6 +8,9 @@ from __future__ import annotations
 import re
 from typing import Any
 
+#: Marcatore interno: area attribuita dall'autore-chiave, non dalle keyword.
+AREA_BY_AUTHOR_FLAG = "area-assegnata-per-autore"
+
 try:
     from src.noise_filter import is_preprint_or_repository
 except ImportError:  # esecuzione diretta senza package
@@ -27,6 +30,36 @@ def _has_phrase(text: str, phrase: str) -> bool:
         return False
     # Use simple substring match — adequate for our keyword sizes
     return phrase_norm in text_norm
+
+
+def _suppress_substring_hits(hits: list[tuple[str, int]]) -> list[tuple[str, int]]:
+    """Scarta una keyword positiva quando e sottostringa di un'altra che ha pure
+    fatto centro nella stessa area.
+
+    Introdotta il 22/09/2026 insieme a `urban forest`. `_has_phrase` fa un match
+    di sottostringa nuda, quindi un testo che dice *urban forestry* fa scattare
+    anche *urban forest*: senza questa passata il paper prenderebbe +3 E +2 per
+    la stessa frase, e gli score piu gonfiati sarebbero proprio quelli dei lavori
+    piu a tema -- non confrontabili con le settimane precedenti.
+
+    Vale solo fra keyword positive: una negativa non va mai soppressa, perche il
+    suo compito e togliere punti, e una coppia come `deforestation` dentro un
+    testo che dice anche `forestation` deve continuare a pesare.
+    """
+    positives = [(kw, w) for kw, w in hits if w > 0]
+    kept: list[tuple[str, int]] = []
+    for kw, w in hits:
+        if w <= 0:
+            kept.append((kw, w))
+            continue
+        kw_n = _norm(kw)
+        covered = any(
+            kw_n != _norm(other) and kw_n in _norm(other)
+            for other, _ in positives
+        )
+        if not covered:
+            kept.append((kw, w))
+    return kept
 
 
 def score_paper(paper: dict[str, Any], rules: dict[str, Any]) -> tuple[int, str, list[str]]:
@@ -56,27 +89,25 @@ def score_paper(paper: dict[str, Any], rules: dict[str, Any]) -> tuple[int, str,
 
     # Per-area scoring
     for area, area_rules in (rules.get("areas") or {}).items():
-        score = 0
-        kw_for_area: list[str] = []
-
-        had_high = False
+        hits: list[tuple[str, int]] = []
         for kw in area_rules.get("positive_high", []) or []:
             if _has_phrase(text, kw):
-                score += 3
-                had_high = True
-                kw_for_area.append(f"+3:{kw}")
+                hits.append((kw, 3))
         for kw in area_rules.get("positive_medium", []) or []:
             if _has_phrase(text, kw):
-                score += 2
-                kw_for_area.append(f"+2:{kw}")
+                hits.append((kw, 2))
         for kw in area_rules.get("positive_low", []) or []:
             if _has_phrase(text, kw):
-                score += 1
-                kw_for_area.append(f"+1:{kw}")
+                hits.append((kw, 1))
         for kw in area_rules.get("negative", []) or []:
             if _has_phrase(text, kw):
-                score -= 2
-                kw_for_area.append(f"-2:{kw}")
+                hits.append((kw, -2))
+
+        hits = _suppress_substring_hits(hits)
+
+        score = sum(w for _, w in hits)
+        had_high = any(w == 3 for _, w in hits)
+        kw_for_area = [f"{'+' if w > 0 else ''}{w}:{kw}" for kw, w in hits]
 
         if score > best_score:
             best_score = score
@@ -85,10 +116,12 @@ def score_paper(paper: dict[str, Any], rules: dict[str, Any]) -> tuple[int, str,
             best_had_high = had_high
 
     # If the paper got 0 in all areas but has a key author, classify by author area
+    area_by_author = False
     if best_score == 0:
         author_match = _check_key_author(paper, rules)
         if author_match:
             best_area = author_match["areas"][0] if author_match.get("areas") else best_area
+            area_by_author = True
 
     # Bonuses (apply only if at least one area matched OR key author)
     bonus = 0
@@ -119,6 +152,15 @@ def score_paper(paper: dict[str, Any], rules: dict[str, Any]) -> tuple[int, str,
     if best_score > 0 or author_match:
         best_score += bonus
         matched_keywords.extend(bonus_notes)
+
+    # Marcatore (22/09/2026). Quando un lavoro non prende un solo punto di
+    # keyword ma ha un autore monitorato, l'area gliela da l'autore. E voluto,
+    # ma nel digest produce un'illusione ottica: in W39 la sezione VTA conteneva
+    # un paper di percezione estetica del paesaggio, finito li solo perche Hauer
+    # e catalogato VTA. Chi legge di corsa crede che il canale VTA abbia
+    # prodotto qualcosa. Il digest ora lo dichiara.
+    if area_by_author and author_match:
+        matched_keywords.append(AREA_BY_AUTHOR_FLAG)
 
     # Regola anti-falso-positivo (15/09/2026). Un hit che raggiunge la soglia
     # senza una sola keyword `positive_high` dell'area e fatto di termini

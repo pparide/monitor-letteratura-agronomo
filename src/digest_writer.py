@@ -5,6 +5,7 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from src.scoring import AREA_BY_AUTHOR_FLAG
 
 
 AREA_LABELS = {
@@ -106,12 +107,22 @@ def write_digest(
                 cited = p.get("cited_by_count", 0) or 0
                 if cited > 0:
                     lines.append(f"- **Citazioni**: {cited}")
-                matched = p.get("matched_keywords") or []
+                matched = list(p.get("matched_keywords") or [])
+                # Il marcatore non e una keyword: esce come riga propria, cosi
+                # non finisce troncato dal taglio a 6 voci (22/09/2026).
+                area_by_author = AREA_BY_AUTHOR_FLAG in matched
+                if area_by_author:
+                    matched = [m for m in matched if m != AREA_BY_AUTHOR_FLAG]
                 if matched:
                     matched_str = ", ".join(matched[:6])
                     if len(matched) > 6:
                         matched_str += ", ..."
                     lines.append(f"- **Match**: {matched_str}")
+                if area_by_author:
+                    lines.append(
+                        "- ⚠️ **Area assegnata per autore**, non per contenuto: "
+                        "nessuna keyword dell'area ha fatto punti."
+                    )
                 source_f = p.get("source_fetcher", "")
                 if source_f:
                     lines.append(f"- **Fonte**: {source_f}")

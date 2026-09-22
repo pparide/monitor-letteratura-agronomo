@@ -406,3 +406,46 @@ def test_sources_e_rules_sono_sincronizzati():
     sids = [j["openalex_id"] for j in sources["journals"]]
     assert len(sids) == len(set(sids)), "rivista duplicata in sources.json"
     print(f"  ✓ test_sources_e_rules_sono_sincronizzati ({len(ids_s)} autori, {len(sids)} riviste)")
+
+
+def test_urban_forest_non_raddoppia_su_urban_forestry():
+    """22/09/2026. `urban forest` e sottostringa di `urban forestry` e il match
+    di _has_phrase e una sottostringa nuda: senza la soppressione il paper
+    prenderebbe +3 E +2 per la stessa frase, gonfiando proprio i lavori piu a
+    tema. Qui si verifica che vinca la piu lunga e si conti una volta sola.
+    """
+    p = {"title": "Educator perspectives on the evolving competencies of urban forestry education",
+         "abstract": "", "author_ids": [], "is_oa": False, "cited_by_count": 0}
+    score, area, kw = score_paper(p, _RULES)
+    forestry = [k for k in kw if k.endswith("urban forestry")]
+    forest = [k for k in kw if k.endswith("urban forest")]
+    assert len(forestry) == 1, kw
+    assert not forest, f"urban forest non e stata soppressa: {kw}"
+    assert score == 3, f"atteso 3 (solo urban forestry), ottenuto {score}: {kw}"
+    # e quando 'urban forest' compare da sola, deve invece contare
+    p2 = dict(p, title="Mapping urban forest canopy in a Mediterranean city")
+    score2, _, kw2 = score_paper(p2, _RULES)
+    assert any(k.endswith("urban forest") for k in kw2), kw2
+    assert score2 == 3, f"atteso 3, ottenuto {score2}: {kw2}"
+    print("  ✓ test_urban_forest_non_raddoppia_su_urban_forestry")
+
+
+def test_area_assegnata_per_autore_e_dichiarata():
+    """22/09/2026. Un lavoro senza nemmeno una keyword ma con autore monitorato
+    prende l'area DELL'AUTORE. E voluto, ma in W39 ha messo nella sezione VTA un
+    paper di percezione estetica del paesaggio, solo perche Hauer e catalogato
+    VTA: chi legge di corsa crede che il canale VTA abbia prodotto qualcosa.
+    Il marcatore deve comparire, e non deve comparire quando l'area se l'e
+    guadagnata una keyword.
+    """
+    from src.scoring import AREA_BY_AUTHOR_FLAG
+    senza_keyword = {"title": "Balancing color and order: dominant color composition and spatial structure",
+                     "abstract": "", "author_ids": ["A5078114034"], "is_oa": False, "cited_by_count": 0}
+    score, area, kw = score_paper(senza_keyword, _RULES)
+    assert AREA_BY_AUTHOR_FLAG in kw, f"marcatore assente: {kw}"
+    assert score == 5, f"atteso 5 (solo bonus autore), ottenuto {score}: {kw}"
+    con_keyword = {"title": "Surface urban heat island variability in Cosenza, southern Italy",
+                   "abstract": "", "author_ids": ["A5059847232"], "is_oa": False, "cited_by_count": 0}
+    _, _, kw2 = score_paper(con_keyword, _RULES)
+    assert AREA_BY_AUTHOR_FLAG not in kw2, f"marcatore di troppo: {kw2}"
+    print("  ✓ test_area_assegnata_per_autore_e_dichiarata")

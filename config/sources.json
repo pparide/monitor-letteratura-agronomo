@@ -117,6 +117,28 @@
       ],
       "is_oa": true,
       "note": "Autorizzata da Paride il 07/07/2026 (brief W28). Volume contenuto (758 lavori totali): nessun filtro necessario."
+    },
+    {
+      "name": "Landscape and Urban Planning (Elsevier)",
+      "openalex_id": "S104597489",
+      "issn_l": "0169-2046",
+      "rss": null,
+      "areas": [
+        "verde_urbano"
+      ],
+      "is_oa": false,
+      "note": "Aggiunta il 22/09/2026. E la rivista di pianificazione del campo, complementare a UFUG: UFUG pubblica l'albero, LUP pubblica il piano. Nel digest W39 ci e arrivata solo di rimbalzo dal canale autori (Lafortezza) -- la stessa falla che UFUG aveva fino al 15/09. ID verificato via API OpenAlex il 22/09/2026: ISSN-L 0169-2046, Elsevier BV, 5993 lavori complessivi, 148 nel 2026 e 21 dal 01/08 -- circa 6 per finestra di 14 giorni, quindi NIENTE filter_query: il tetto di 50 basta e avanza."
+    },
+    {
+      "name": "Urban Climate (Elsevier)",
+      "openalex_id": "S2764899123",
+      "issn_l": "2212-0955",
+      "rss": null,
+      "areas": [
+        "verde_urbano"
+      ],
+      "is_oa": false,
+      "note": "Aggiunta il 22/09/2026. Alimenta il capitolo microclimatico del Piano del Verde. Nel digest W39 il caso Padova (UHI + giustizia climatica) e arrivato dal canale query, cioe per fortuna della stringa 'urban heat island Mediterranean'. ID verificato via API OpenAlex il 22/09/2026: ISSN-L 2212-0955, Elsevier BV, 3105 lavori complessivi, 384 nel 2026 e 73 dal 01/08 -- circa 21 per finestra di 14 giorni, sotto il tetto di 50, quindi niente filter_query. MA il volume e quattro volte quello di LUP: se il conteggio stampato da main.py per questa rivista si avvicina a 50, la finestra e satura e serve filter_query (lezione di Land, 15/09)."
     }
   ],
   "authors": [
