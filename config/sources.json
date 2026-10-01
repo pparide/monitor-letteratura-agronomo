@@ -139,6 +139,31 @@
       ],
       "is_oa": false,
       "note": "Aggiunta il 22/09/2026. Alimenta il capitolo microclimatico del Piano del Verde. Nel digest W39 il caso Padova (UHI + giustizia climatica) e arrivato dal canale query, cioe per fortuna della stringa 'urban heat island Mediterranean'. ID verificato via API OpenAlex il 22/09/2026: ISSN-L 2212-0955, Elsevier BV, 3105 lavori complessivi, 384 nel 2026 e 73 dal 01/08 -- circa 21 per finestra di 14 giorni, sotto il tetto di 50, quindi niente filter_query. MA il volume e quattro volte quello di LUP: se il conteggio stampato da main.py per questa rivista si avvicina a 50, la finestra e satura e serve filter_query (lezione di Land, 15/09)."
+    },
+    {
+      "name": "Arboricultural Journal (Taylor & Francis)",
+      "openalex_id": "S2764655933",
+      "issn_l": "0003-7931",
+      "rss": null,
+      "areas": [
+        "vta",
+        "verde_urbano"
+      ],
+      "is_oa": false,
+      "note": "Aggiunta il 30/09/2026 (brief W40, sez. 6: canale VTA a 2 hit in 22 settimane). ID verificato via API OpenAlex il 30/09/2026: ISSN-L 0003-7931, Taylor & Francis, 2127 lavori, 27 nel 2026, 4 dal 01/08 -- nessun filter_query. Fra i lavori 2026 che il motore non aveva visto: 'Quantitative assessment of urban tree fall risk using ensemble learning' (27/08), 'Growing and dormant season tree risk assessments' (30/01), 'Evaluating wind load responses in tree crowns under different pruning techniques' (26/03)."
+    },
+    {
+      "name": "Trees - Structure and Function (Springer)",
+      "openalex_id": "S110876149",
+      "issn_l": "0931-1890",
+      "rss": null,
+      "areas": [
+        "vta",
+        "verde_urbano"
+      ],
+      "is_oa": false,
+      "filter_query": "urban tree OR street tree OR tree stability OR biomechanics OR wood decay OR anchorage OR pulling test OR tree failure OR tomography",
+      "note": "Aggiunta il 30/09/2026 (brief W40, sez. 6). ID verificato via API OpenAlex il 30/09/2026: ISSN-L 0931-1890, Springer, 4016 lavori, 124 nel 2026, 24 dal 01/08, in gran parte fisiologia forestale. CON filter_query: 25 lavori nel 2026 (~1 per finestra di 14 giorni), fra cui 'Fatigue life assessment of urban street trees under wind loading: effects of decay progression and soil conditions' (21/07) e 'Improving tree stability with optimized pruning' (08/05). Il residuo di fisiologia che passa il filtro lo taglia require_positive_high."
     }
   ],
   "authors": [
@@ -282,6 +307,42 @@
       ],
       "affiliation": "Univ. della Campania Luigi Vanvitelli",
       "note": "3 lavori, topics Land Use and Ecosystem Services. Profilo locale campano, in lista dal 28/07/2026. Resa attesa bassa, costo una chiamata."
+    },
+    {
+      "name": "Brian C.P. Kane",
+      "openalex_id": "A5025464537",
+      "areas": [
+        "vta"
+      ],
+      "affiliation": "University of Massachusetts Amherst",
+      "note": "Aggiunto il 30/09/2026 (brief W40, sez. 6). ID verificato via API OpenAlex il 30/09/2026. 120 lavori, topic principale Tree Root and Stability Studies. Biomeccanica, cabling/bracing, potatura, dati pre/post tempesta. ATTENZIONE OMONIMI: A5080481623 e un musicologo di Yale (40 lavori), A5113727350 profilo misto di 6 lavori."
+    },
+    {
+      "name": "E. Thomas Smiley",
+      "openalex_id": "A5113885024",
+      "areas": [
+        "vta"
+      ],
+      "affiliation": "Bartlett Tree Research Laboratories (affiliazione non riportata da OpenAlex)",
+      "note": "Aggiunto il 30/09/2026 (brief W40, sez. 6). ID verificato via API OpenAlex il 30/09/2026. 63 lavori, topic Tree Root and Stability Studies; ultimo lavoro in OpenAlex 01/11/2024. Riproducibilita dei metodi di tree risk assessment, codominanze. Omonimi 'Thomas Smiley' A5084177085 (etica medica) e A5071987813 (2 lavori, verde urbano, NON fuso: tenere d'occhio)."
+    },
+    {
+      "name": "Andreas Detter",
+      "openalex_id": "A5037823370",
+      "areas": [
+        "vta"
+      ],
+      "affiliation": "Brudi & Partner TreeConsult (affiliazione non riportata da OpenAlex)",
+      "note": "Aggiunto il 30/09/2026 (brief W40, sez. 6). ID verificato via API OpenAlex il 30/09/2026. 13 lavori: pulling test laser (2026), tomografia sonica vs prove di trazione statica (2024), ancoraggio (2023). Il lavoro del 27/04/2026 e l'unico hit VTA pertinente del motore in 22 settimane (W19)."
+    },
+    {
+      "name": "Steffen Rust",
+      "openalex_id": "A5080074510",
+      "areas": [
+        "vta"
+      ],
+      "affiliation": "HAWK Hildesheim/Holzminden/Gottingen",
+      "note": "Aggiunto il 30/09/2026 (brief W40, sez. 6). ID verificato via API OpenAlex il 30/09/2026. 48 lavori: carie interna del fusto, resistenza al vento, pulling test. Parte della produzione e forestale (stock di carbonio): il bonus d'autore porta dentro anche quella, il marcatore area-per-autore la segnala."
     }
   ],
   "queries": [

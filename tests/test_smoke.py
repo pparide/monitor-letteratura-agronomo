@@ -449,3 +449,24 @@ def test_area_assegnata_per_autore_e_dichiarata():
     _, _, kw2 = score_paper(con_keyword, _RULES)
     assert AREA_BY_AUTHOR_FLAG not in kw2, f"marcatore di troppo: {kw2}"
     print("  ✓ test_area_assegnata_per_autore_e_dichiarata")
+
+
+def test_canale_vta_keyword_e_autori_260930():
+    """30/09/2026. Il canale VTA aveva prodotto 2 hit in 22 settimane. Titoli
+    veri 2026 di Arboricultural Journal e di Detter: con le keyword nuove
+    entrano in VTA, e l'autore aggiunto (Detter) da il bonus. Il 'wind loading'
+    non deve sommarsi a 'wind load' (soppressione delle sottostringhe).
+    """
+    p = {"title": "Quantitative assessment of urban tree fall risk using ensemble learning",
+         "abstract": "", "author_ids": [], "is_oa": False, "cited_by_count": 0}
+    score, area, kw = score_paper(p, _RULES)
+    assert area == "vta" and score == 3, f"atteso vta/3, ottenuto {area}/{score}: {kw}"
+    d = {"title": "Do Sonic Tomography and Static Load Tests Yield Comparable Values of Load-Bearing Capacity?",
+         "abstract": "", "author_ids": ["A5037823370"], "is_oa": False, "cited_by_count": 0}
+    score, area, kw = score_paper(d, _RULES)
+    assert area == "vta" and score == 10, f"atteso vta/10, ottenuto {area}/{score}: {kw}"
+    w = {"title": "Street trees under wind loading and tree failure",
+         "abstract": "", "author_ids": [], "is_oa": False, "cited_by_count": 0}
+    _, _, kw = score_paper(w, _RULES)
+    assert not any(k.endswith(":wind load") for k in kw), f"wind load contato due volte: {kw}"
+    print("  ✓ test_canale_vta_keyword_e_autori_260930")

@@ -53,7 +53,10 @@
         "tree decay detection",
         "tree stability",
         "TRAQ",
-        "elasto-inclinometer"
+        "elasto-inclinometer",
+        "tree failure",
+        "tree fall",
+        "static load test"
       ],
       "positive_medium": [
         "sonic tomography",
@@ -63,7 +66,10 @@
         "Phellinus",
         "Inonotus",
         "veteran tree",
-        "monumental tree"
+        "monumental tree",
+        "windthrow",
+        "root plate",
+        "wind loading"
       ],
       "positive_low": [
         "branch attachment",
@@ -189,6 +195,34 @@
       "areas": [
         "verde_urbano"
       ]
+    },
+    {
+      "name": "Brian C.P. Kane",
+      "openalex_id": "A5025464537",
+      "areas": [
+        "vta"
+      ]
+    },
+    {
+      "name": "E. Thomas Smiley",
+      "openalex_id": "A5113885024",
+      "areas": [
+        "vta"
+      ]
+    },
+    {
+      "name": "Andreas Detter",
+      "openalex_id": "A5037823370",
+      "areas": [
+        "vta"
+      ]
+    },
+    {
+      "name": "Steffen Rust",
+      "openalex_id": "A5080074510",
+      "areas": [
+        "vta"
+      ]
     }
   ],
   "require_positive_high": true,
@@ -243,5 +277,6 @@
     "_comment_egusphere": "La falla EGUsphere ha prodotto 5 falsi hit dallo stesso preprint in open review (W34 x3, W35, W36). Silente da W36, non risolta: il filtro nasce ora.",
     "_comment_preprint": "preprint_source_patterns serve al caso Ferrini: nega il bonus +5 d'autore -- non scarta il paper -- quando la fonte e un preprint server o un repository istituzionale. Vedi fonti/03_autori_chiave.md, sezione FERRINI."
   },
-  "_comment_keywords_260922": "Keyword aggiunte il 22/09/2026 a verde_urbano.positive_medium: urban afforestation, urban forest, tree planting, tree establishment, urban greening. Nascono dal digest W39: il paper piu rilevante della settimana per lo Studio -- Feng, Lafortezza et al., 'Conditional cooling from large-scale urban afforestation', Landscape and Urban Planning, DOI 10.1016/j.landurbplan.2026.105786 -- ha preso ZERO punti di keyword, perche 'urban afforestation' non era in elenco. Senza il bonus d'autore (+5 Lafortezza) sarebbe stato invisibile. 'urban forest' al singolare mancava: c'era solo 'urban forestry'. SCARTATA 'cooling effect': (a) non avrebbe comunque catturato il paper bersaglio, che dice solo 'cooling'; (b) su 'urban cooling effect' avrebbe sommato +2 a 'urban cooling', contando due volte lo stesso concetto. ATTENZIONE, condizione d'uso: 'urban forest' e sottostringa di 'urban forestry' e il match di _has_phrase e una sottostringa nuda. Senza la soppressione delle sottostringhe introdotta lo stesso giorno in scoring.py, un paper con 'urban forestry' prenderebbe +3 E +2 per la stessa frase, gonfiando di 2 punti proprio i lavori piu a tema e rendendo gli score non confrontabili con le settimane precedenti. Le due modifiche vanno insieme: non aggiungere 'urban forest' senza il fix. REVISIONE dello stesso giorno, dopo una prova su casi reali: 'urban afforestation' e 'urban forest' sono state promosse da positive_medium a positive_high. Motivo: con la regola require_positive_high (15/09) una keyword media non basta a tenere in vita un hit, e il paper bersaglio di Lafortezza restava declassato anche dopo l'aggiunta. Le due frasi sono specifiche quanto 'urban greenspace', gia in positive_high. La soppressione delle sottostringhe rende innocua la convivenza di 'urban forest' e 'urban forestry' nello stesso elenco: su un testo che dice 'urban forestry' vince la piu lunga e si conta +3 una volta sola."
+  "_comment_keywords_260922": "Keyword aggiunte il 22/09/2026 a verde_urbano.positive_medium: urban afforestation, urban forest, tree planting, tree establishment, urban greening. Nascono dal digest W39: il paper piu rilevante della settimana per lo Studio -- Feng, Lafortezza et al., 'Conditional cooling from large-scale urban afforestation', Landscape and Urban Planning, DOI 10.1016/j.landurbplan.2026.105786 -- ha preso ZERO punti di keyword, perche 'urban afforestation' non era in elenco. Senza il bonus d'autore (+5 Lafortezza) sarebbe stato invisibile. 'urban forest' al singolare mancava: c'era solo 'urban forestry'. SCARTATA 'cooling effect': (a) non avrebbe comunque catturato il paper bersaglio, che dice solo 'cooling'; (b) su 'urban cooling effect' avrebbe sommato +2 a 'urban cooling', contando due volte lo stesso concetto. ATTENZIONE, condizione d'uso: 'urban forest' e sottostringa di 'urban forestry' e il match di _has_phrase e una sottostringa nuda. Senza la soppressione delle sottostringhe introdotta lo stesso giorno in scoring.py, un paper con 'urban forestry' prenderebbe +3 E +2 per la stessa frase, gonfiando di 2 punti proprio i lavori piu a tema e rendendo gli score non confrontabili con le settimane precedenti. Le due modifiche vanno insieme: non aggiungere 'urban forest' senza il fix. REVISIONE dello stesso giorno, dopo una prova su casi reali: 'urban afforestation' e 'urban forest' sono state promosse da positive_medium a positive_high. Motivo: con la regola require_positive_high (15/09) una keyword media non basta a tenere in vita un hit, e il paper bersaglio di Lafortezza restava declassato anche dopo l'aggiunta. Le due frasi sono specifiche quanto 'urban greenspace', gia in positive_high. La soppressione delle sottostringhe rende innocua la convivenza di 'urban forest' e 'urban forestry' nello stesso elenco: su un testo che dice 'urban forestry' vince la piu lunga e si conta +3 una volta sola.",
+  "_comment_keywords_260930": "Aggiunte il 30/09/2026 all'area vta: tree failure, tree fall, static load test (positive_high); windthrow, root plate, wind loading (positive_medium). Nascono dalla verifica fonti del brief W40: il canale VTA ha prodotto 2 hit in 22 settimane. 'tree fall' e 'wind loading' non erano nella proposta del brief: aggiunte dopo la prova sui titoli 2026 reali di Arboricultural Journal e Trees, dove 'urban tree fall risk' e 'street trees under wind loading' non prendevano nessuna keyword high. 'wind loading' in medium contiene 'wind load' (low): la soppressione delle sottostringhe conta solo la piu lunga."
 }
