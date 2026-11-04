@@ -253,6 +253,15 @@
       "note": "ORCID 0000-0003-3506-2458, 189 lavori, topics Urban Heat Island Mitigation."
     },
     {
+      "name": "Marina Bergen Jensen",
+      "openalex_id": "A5074919573",
+      "areas": [
+        "verde_urbano"
+      ],
+      "affiliation": "University of Copenhagen",
+      "note": "ORCID 0000-0003-0202-0366, 224 lavori; UHI e benchmark di copertura verde. Esistono 4 profili omonimi minori (1-2 lavori, senza ORCID): usare solo questo ID. Aggiunta 04/11/2026 dopo il brief W45."
+    },
+    {
       "name": "Riccardo Buccolieri",
       "openalex_id": "A5059847232",
       "areas": [
